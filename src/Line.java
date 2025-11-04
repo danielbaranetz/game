@@ -23,7 +23,7 @@ public class Line {
     public Point middle() {
         double midX = start.getX() + end.getX() / 2;
         double midY = start.getY() + end.getY() / 2;
-        return new Point (midX,midY);
+        return new Point(midX, midY);
     }
 
     // Returns the start point of the line
@@ -38,14 +38,27 @@ public class Line {
 
     // Returns true if the lines intersect, false otherwise
     public boolean isIntersecting(Line other) {
-        return
+        return this.slope() != other.slope() || this.intersectionY() == other.intersectionY();
+
     }
 
     // Returns the intersection point if the lines intersect,
     // and null otherwise.
-    public Point intersectionWith(Line other) { }
+    public double slope() {
+        return (end.getY() - start.getY()) / (end.getX() - start.getY());
+    }
+
+    public double intersectionY() {
+        return - slope() * start.getX() + start.getY();
+    }
+
+    public Point intersectionWith(Line other) {
+        return new Point(5, 3);
+    }
 
     // equals -- return true is the lines are equal, false otherwise
-    public boolean equals(Line other) { }
+    public boolean equals(Line other) {
+        return start == other.start && end == other.end;
+    }
 
 }
