@@ -1,5 +1,4 @@
 public class Line {
-    // constructors
     private Point start;
     private Point end;
 
@@ -13,52 +12,72 @@ public class Line {
         this.end = new Point(x2, y2);
     }
 
-    // Return the length of the line
-    public double length() {
-        return start.distance(end);
+    public Point start() { return start; }
+    public Point end() { return end; }
 
+    // slope
+    private Double slope() {
+        double dx = end.getX() - start.getX();
+        double dy = end.getY() - start.getY();
+        if (Math.abs(dx) < 1e-9) return null; // קו אנכי
+        return dy / dx;
     }
 
-    // Returns the middle point of the line
-    public Point middle() {
-        double midX = start.getX() + end.getX() / 2;
-        double midY = start.getY() + end.getY() / 2;
-        return new Point(midX, midY);
+    // intersecting with y
+    private double yIntercept(Double slope) {
+        return start.getY() - slope * start.getX();
     }
 
-    // Returns the start point of the line
-    public Point start() {
-        return start;
-    }
-
-    // Returns the end point of the line
-    public Point end() {
-        return end;
-    }
-
-    // Returns true if the lines intersect, false otherwise
+    // check if intersecting
     public boolean isIntersecting(Line other) {
-        return this.slope() != other.slope() || this.intersectionY() == other.intersectionY();
-
+        return intersectionWith(other) != null;
     }
 
-    // Returns the intersection point if the lines intersect,
-    // and null otherwise.
-    public double slope() {
-        return (end.getY() - start.getY()) / (end.getX() - start.getY());
-    }
-
-    public double intersectionY() {
-        return - slope() * start.getX() + start.getY();
-    }
-
+    // intersecting point(if not null)
     public Point intersectionWith(Line other) {
-        return new Point(5, 3);
+        Double m1 = this.slope();
+        Double m2 = other.slope();
+
+        // two lines vertical - lines not intersecting
+        if (m1 == null && m2 == null) return null;
+
+        double x, y;
+
+        // one line vertical
+        if (m1 == null) {
+            x = start.getX();
+            double b2 = other.yIntercept(m2);
+            y = m2 * x + b2;
+        } else if (m2 == null) {
+            x = other.start.getX();
+            double b1 = this.yIntercept(m1);
+            y = m1 * x + b1;
+        } else {
+            // parallels
+            if (Math.abs(m1 - m2) < 1e-9) return null;
+
+            double b1 = this.yIntercept(m1);
+            double b2 = other.yIntercept(m2);
+
+            x = (b2 - b1) / (m1 - m2);
+            y = m1 * x + b1;
+        }
+
+        Point p = new Point(x, y);
+
+        // check if the point on the both lines
+        if (isOnSegment(p, this) && isOnSegment(p, other)) {
+            return p;
+        }
+
+        return null;
     }
 
-    // equals -- return true is the lines are equal, false otherwise
-    public boolean equals(Line other) {
-        return start == other.start && end == other.end;
+    private boolean isOnSegment(Point p, Line l) {
+        double x = p.getX(), y = p.getY();
+        return x >= Math.min(l.start.getX(), l.end.getX()) - 1e-9 &&
+                x <= Math.max(l.start.getX(), l.end.getX()) + 1e-9 &&
+                y >= Math.min(l.start.getY(), l.end.getY()) - 1e-9 &&
+                y <= Math.max(l.start.getY(), l.end.getY()) + 1e-9;
     }
-
 }
