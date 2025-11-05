@@ -12,8 +12,13 @@ public class Line {
         this.end = new Point(x2, y2);
     }
 
-    public Point start() { return start; }
-    public Point end() { return end; }
+    public Point start() {
+        return start;
+    }
+
+    public Point end() {
+        return end;
+    }
 
     // slope
     private Double slope() {
