@@ -33,6 +33,7 @@ public class LinesApp {
         drawIntersections(lines, d);
 
         gui.show(d);
+
     }
 
     private Line generateRandomLine() {
