@@ -5,7 +5,7 @@ import biuoop.Sleeper;
 public class DrawAnimation {
     public static final int WIDTH = 800;
     public static final int HEIGHT = 600;
-    public void drawAnimation(Point start, double dx, double dy) {
+    public static void drawAnimation(Point start, double dx, double dy) {
         GUI gui = new GUI("title",WIDTH,HEIGHT);
         Sleeper sleeper = new Sleeper();
         Point point = new Point(start.getX(), start.getY());
