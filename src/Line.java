@@ -1,7 +1,11 @@
+
+
 public class Line {
+    // Fields
     private Point start;
     private Point end;
 
+    // Constructors
     public Line(Point start, Point end) {
         this.start = start;
         this.end = end;
@@ -10,79 +14,129 @@ public class Line {
     public Line(double x1, double y1, double x2, double y2) {
         this.start = new Point(x1, y1);
         this.end = new Point(x2, y2);
+
     }
 
+    // Returns the length of the line
+    public double length() {
+        return start.distance(end);
+    }
+
+    // Returns the middle point of the line
+    public Point middle() {
+        double midX = (start.getX() + end.getX()) / 2;
+        double midY = (start.getY() + end.getY()) / 2;
+        return new Point(midX, midY);
+    }
+
+    // Returns the start point
     public Point start() {
         return start;
     }
 
+    // Returns the end point
     public Point end() {
         return end;
     }
 
-    // slope
-    private Double slope() {
-        double dx = end.getX() - start.getX();
-        double dy = end.getY() - start.getY();
-        if (Math.abs(dx) < 1e-9) return null; // קו אנכי
-        return dy / dx;
+    // Returns the slope of the line (∞ for vertical lines)
+    public double slope() {
+        if (end.getX() == start.getX()) {
+            return Double.POSITIVE_INFINITY;
+        }
+        return (end.getY() - start.getY()) / (end.getX() - start.getX());
     }
 
-    // intersecting with y
-    private double yIntercept(Double slope) {
-        return start.getY() - slope * start.getX();
+    // Returns the intersection with the Y-axis (b in y = mx + b)
+    public double intersectionY() {
+        if (Double.isInfinite(slope())) {
+            return Double.NaN;
+        }
+        return -slope() * start.getX() + start.getY();
     }
 
-    // check if intersecting
+    // Returns true if the two line segments intersect
     public boolean isIntersecting(Line other) {
-        return intersectionWith(other) != null;
+        return this.intersectionWith(other) != null;
     }
 
-    // intersecting point(if not null)
+    // Returns the intersection point if the segments intersect, otherwise null
     public Point intersectionWith(Line other) {
-        Double m1 = this.slope();
-        Double m2 = other.slope();
+        double x1 = this.start.getX();
+        double y1 = this.start.getY();
+        double x2 = this.end.getX();
+        double y2 = this.end.getY();
 
-        // two lines vertical - lines not intersecting
-        if (m1 == null && m2 == null) return null;
+        double x3 = other.start.getX();
+        double y3 = other.start.getY();
+        double x4 = other.end.getX();
+        double y4 = other.end.getY();
 
-        double x, y;
+        double denom = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
 
-        // one line vertical
-        if (m1 == null) {
-            x = start.getX();
-            double b2 = other.yIntercept(m2);
-            y = m2 * x + b2;
-        } else if (m2 == null) {
-            x = other.start.getX();
-            double b1 = this.yIntercept(m1);
-            y = m1 * x + b1;
-        } else {
-            // parallels
-            if (Math.abs(m1 - m2) < 1e-9) return null;
-
-            double b1 = this.yIntercept(m1);
-            double b2 = other.yIntercept(m2);
-
-            x = (b2 - b1) / (m1 - m2);
-            y = m1 * x + b1;
+        // denom == 0 → lines are parallel or collinear
+        if (Math.abs(denom) < 1e-10) {
+            // Check if they are collinear
+            if (isCollinearWith(other)) {
+                // Check if they overlap
+                if (isOverlapping(other)) {
+                    // Return one of the shared points
+                    for (Point p : new Point[]{other.start, other.end}) {
+                        if (this.isPointOnSegment(p)) {
+                            return p;
+                        }
+                    }
+                }
+            }
+            return null;
         }
 
-        Point p = new Point(x, y);
+        // Calculate intersection point (for infinite lines)
+        double px = ((x1 * y2 - y1 * x2) * (x3 - x4)
+                - (x1 - x2) * (x3 * y4 - y3 * x4)) / denom;
+        double py = ((x1 * y2 - y1 * x2) * (y3 - y4)
+                - (y1 - y2) * (x3 * y4 - y3 * x4)) / denom;
 
-        // check if the point on the both lines
-        if (isOnSegment(p, this) && isOnSegment(p, other)) {
-            return p;
+        Point intersection = new Point(px, py);
+
+        // Check if the intersection lies on both line segments
+        if (isPointOnSegment(intersection) && other.isPointOnSegment(intersection)) {
+            return intersection;
         }
 
-        return null;
+        return null; // intersection is outside the segments
     }
 
-    private boolean isOnSegment(Point p, Line l) {
-        double x = p.getX(), y = p.getY();
-        return x >= Math.min(l.start.getX(), l.end.getX()) - 1e-9 &&
-                x <= Math.max(l.start.getX(), l.end.getX()) + 1e-9 &&
-                y >= Math.min(l.start.getY(), l.end.getY()) - 1e-9 &&
-                y <= Math.max(l.start.getY(), l.end.getY()) + 1e-9;
+    // Checks if a point lies on this line segment
+    private boolean isPointOnSegment(Point p) {
+        double minX = Math.min(start.getX(), end.getX());
+        double maxX = Math.max(start.getX(), end.getX());
+        double minY = Math.min(start.getY(), end.getY());
+        double maxY = Math.max(start.getY(), end.getY());
+
+        return p.getX() >= minX - 1e-10 && p.getX() <= maxX + 1e-10 &&
+                p.getY() >= minY - 1e-10 && p.getY() <= maxY + 1e-10;
+    }
+
+    // Checks if this line and another line are collinear (on the same infinite line)
+    private boolean isCollinearWith(Line other) {
+        // If one point from 'other' lies on this line → they are collinear
+        double area = (other.start.getX() - start.getX()) * (end.getY() - start.getY())
+                - (other.start.getY() - start.getY()) * (end.getX() - start.getX());
+        return Math.abs(area) < 1e-10;
+    }
+
+    // Checks if two collinear lines overlap
+    private boolean isOverlapping(Line other) {
+        return this.isPointOnSegment(other.start) ||
+                this.isPointOnSegment(other.end) ||
+                other.isPointOnSegment(this.start) ||
+                other.isPointOnSegment(this.end);
+    }
+
+    // Returns true if the two lines are equal (regardless of direction)
+    public boolean equals(Line other) {
+        return (this.start.equals(other.start) && this.end.equals(other.end)) ||
+                (this.start.equals(other.end) && this.end.equals(other.start));
     }
 }
