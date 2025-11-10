@@ -6,8 +6,8 @@ import java.util.Random;
 
 public class LinesApp {
 
-    private static final int WIDTH = 800;
-    private static final int HEIGHT = 600;
+    public static final int WIDTH = 800;
+    public static final int HEIGHT = 600;
     private static final int RADIUS = 3;
     private static final int LINES = 10;
     private static final Random RAND = new Random();
