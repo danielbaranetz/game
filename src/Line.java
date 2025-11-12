@@ -80,11 +80,18 @@ public class Line {
             if (isCollinearWith(other)) {
                 // Check if they overlap
                 if (isOverlapping(other)) {
-                    // Return one of the shared points
-                    for (Point p : new Point[]{other.start, other.end}) {
-                        if (this.isPointOnSegment(p)) {
-                            return p;
-                        }
+                    // צריך לבדוק את כל 4 הנקודות
+                    if (this.isPointOnSegment(other.start)) {
+                        return other.start;
+                    }
+                    if (this.isPointOnSegment(other.end)) {
+                        return other.end;
+                    }
+                    if (other.isPointOnSegment(this.start)) {
+                        return this.start;
+                    }
+                    if (other.isPointOnSegment(this.end)) {
+                        return this.end;
                     }
                 }
             }

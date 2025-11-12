@@ -43,37 +43,35 @@ public class Ball {
         return this.velocity;
     }
 
-    public void moveOneStep() {
-        double x = center.getX();
-        double y = center.getY();
-        double dx = velocity.getDx();
-        double dy = velocity.getDy();
+    // It receives the boundaries from outside (instead of taking from DrawAnimation)
+    public void moveOneStep(int minX, int minY, int maxX, int maxY) {
+        // Calculate the next *proposed* position
+        double dx = this.velocity.getDx();
+        double dy = this.velocity.getDy();
+        double nextX = this.center.getX() + dx;
+        double nextY = this.center.getY() + dy;
 
-        // בדיקה אם פוגע בקירות (ימין / שמאל)
-        if (x + radius >= DrawAnimation.WIDTH) {
-            dx = -dx;
-            x = DrawAnimation.WIDTH - radius;
-        }
-        if (x - radius <= 0) {
-            dx = -dx;
-            x = radius;
-        }
-
-        // בדיקה אם פוגע בתקרה / רצפה
-        if (y + radius >= DrawAnimation.HEIGHT) {
-            dy = -dy;
-            y = DrawAnimation.HEIGHT - radius;
-        }
-        if (y - radius <= 0) {
-            dy = -dy;
-            y = radius;
+        // Check horizontal collision
+        if (nextX + this.radius > maxX) {
+            dx = -dx; // Reverse direction
+            nextX = maxX - this.radius; // Snap to wall
+        } else if (nextX - this.radius < minX) {
+            dx = -dx; // Reverse direction
+            nextX = minX + this.radius; // Snap to wall
         }
 
-        // עדכון מהירות
+        // Check vertical collision
+        if (nextY + this.radius > maxY) {
+            dy = -dy; // Reverse direction
+            nextY = maxY - this.radius; // Snap to wall
+        } else if (nextY - this.radius < minY) {
+            dy = -dy; // Reverse direction
+            nextY = minY + this.radius; // Snap to wall
+        }
+
+        // Update the velocity and the position
         this.velocity = new Velocity(dx, dy);
-
-        // הזזת הכדור לפי המהירות המעודכנת
-        this.center = new Point(x + dx, y + dy);
+        this.center = new Point(nextX, nextY);
     }
 
 

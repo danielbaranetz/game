@@ -4,18 +4,26 @@ import java.awt.Color;
 import java.util.Random;
 
 public class MultipleBouncingBallsAnimation {
+    public static final int WIDTH = 800;
+    public static final int HEIGHT = 600;
     public static void main(String[] args) {
+
         int numBalls = args.length;
         Ball[] balls = new Ball[numBalls];
         Random rand = new Random();
 
         for (int i = 0; i < numBalls; i++) {
             int radius = Integer.parseInt(args[i]);
-            int x = rand.nextInt(LinesApp.WIDTH - 2 * radius) + radius;
-            int y = rand.nextInt(LinesApp.HEIGHT - 2 * radius) + radius;
+            int x = rand.nextInt(WIDTH - 2 * radius) + radius;
+            int y = rand.nextInt(HEIGHT - 2 * radius) + radius;
             Point center = new Point(x, y);
 
-            double speed = Math.min(6.0 / radius, 1.0);
+            double speed;
+            if (radius > 50) {
+                speed = 1; // מהירות איטית קבועה לגדולים
+            } else {
+                speed = 6.0 / radius; // מהירות גבוהה לקטנים
+            }
             double angle = rand.nextInt(360);
 
             Ball ball = new Ball(center, radius, Color.BLACK);
@@ -32,7 +40,7 @@ public class MultipleBouncingBallsAnimation {
             d.fillRectangle(0, 0, 800, 600);
 
             for (Ball ball : balls) {
-                ball.moveOneStep();
+                ball.moveOneStep(0, 0, WIDTH, HEIGHT);
                 ball.drawOn(d);
             }
 

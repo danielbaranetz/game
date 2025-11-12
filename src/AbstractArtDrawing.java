@@ -4,7 +4,7 @@ import biuoop.GUI;
 import java.awt.Color;
 import java.util.Random;
 
-public class LinesApp {
+public class AbstractArtDrawing {
 
     public static final int WIDTH = 800;
     public static final int HEIGHT = 600;
@@ -16,20 +16,19 @@ public class LinesApp {
         GUI gui = new GUI("Lines Example", WIDTH, HEIGHT);
         DrawSurface d = gui.getDrawSurface();
 
-        // צור מערך של קווים רנדומליים
+        // Create an array of random lines
         Line[] lines = generateLines(LINES);
 
-        // צייר קווים ונקודות אמצע
+        // Draw lines and middle points
         for (Line l : lines) {
             drawLine(l, d, Color.BLACK);
 
-            // משתמש רק בפונקציה שלך לבדיקה של middle
             Point middle = l.middle();
-            d.setColor(Color.RED);
+            d.setColor(Color.BLUE);
             d.fillCircle((int) middle.getX(), (int) middle.getY(), RADIUS);
         }
 
-        // צייר נקודות חיתוך בין כל הקווים
+        // Draw intersection points between all lines
         drawIntersections(lines, d);
 
         gui.show(d);
@@ -68,7 +67,7 @@ public class LinesApp {
                 if (lines[i].isIntersecting(lines[j])) {
                     Point intersection = lines[i].intersectionWith(lines[j]);
                     if (intersection != null) {
-                        d.setColor(Color.BLUE);
+                        d.setColor(Color.RED);
                         d.fillCircle((int) intersection.getX(),
                                 (int) intersection.getY(), 3);
                     }
