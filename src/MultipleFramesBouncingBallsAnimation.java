@@ -67,9 +67,12 @@ public class MultipleFramesBouncingBallsAnimation {
                         + FRAME2_MIN_Y + radius;
             }
             // ------------------------------------
-
+            int r = rand.nextInt(256);
+            int g = rand.nextInt(256);
+            int b = rand.nextInt(256);
+            Color randomColor = new Color(r, g, b);
             Point center = new Point(x, y);
-            Ball ball = new Ball(center, radius, Color.BLACK); // צבע הכדור שחור
+            Ball ball = new Ball(center, radius, randomColor); // צבע הכדור שחור
             ball.setVelocity(Velocity.fromAngleAndSpeed(angle, speed));
             balls[i] = ball;
         }
