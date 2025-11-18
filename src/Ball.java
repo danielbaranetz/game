@@ -6,6 +6,7 @@ public class Ball {
     private int radius;
     private java.awt.Color color;
     private Velocity velocity;
+    private GameEnvironment gameEnvironment;
 
     public Ball(Point center, int radius, java.awt.Color color){
         this.center = center;
@@ -36,42 +37,37 @@ public class Ball {
     public void setVelocity(Velocity v){
         this.velocity = v;
     }
+
     public void setVelocity(double dx, double dy){
         this.velocity = new Velocity(dx,dy);
     }
+
     public Velocity getVelocity(){
         return this.velocity;
     }
 
+    public void setGameEnvironment(GameEnvironment gameEnvironment) {
+        this.gameEnvironment = gameEnvironment;
+    }
+
     // It receives the boundaries from outside (instead of taking from DrawAnimation)
-    public void moveOneStep(int minX, int minY, int maxX, int maxY) {
-        // Calculate the next *proposed* position
+    public void moveOneStep(){
         double dx = this.velocity.getDx();
         double dy = this.velocity.getDy();
-        double nextX = this.center.getX() + dx;
-        double nextY = this.center.getY() + dy;
-
-        // Check horizontal collision
-        if (nextX + this.radius > maxX) {
-            dx = -dx; // Reverse direction
-            nextX = maxX - this.radius; // Snap to wall
-        } else if (nextX - this.radius < minX) {
-            dx = -dx; // Reverse direction
-            nextX = minX + this.radius; // Snap to wall
+        Point start = this.center;
+        Point end = new Point(start.getX() + dx, start.getY() + dy);
+        Line trajectory = new Line(start, end);
+        CollisionInfo collision = this.gameEnvironment.getClosestCollision(trajectory);
+        if (collision == null) {
+            this.center = end;
+        }else{
+            double newX = collision.collisionPoint().getX() - dx / 1000;
+            double newY = collision.collisionPoint().getY() - dy / 1000;
+            this.center = new Point(newX, newY);
+            Collidable object = collision.collisionObject();
+            Velocity newV = object.hit(collision.collisionPoint(), this.velocity);
+            this.velocity = newV;
         }
-
-        // Check vertical collision
-        if (nextY + this.radius > maxY) {
-            dy = -dy; // Reverse direction
-            nextY = maxY - this.radius; // Snap to wall
-        } else if (nextY - this.radius < minY) {
-            dy = -dy; // Reverse direction
-            nextY = minY + this.radius; // Snap to wall
-        }
-
-        // Update the velocity and the position
-        this.velocity = new Velocity(dx, dy);
-        this.center = new Point(nextX, nextY);
     }
 
 

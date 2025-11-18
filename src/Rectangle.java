@@ -13,12 +13,10 @@ public class Rectangle {
         this.height = height;
     }
 
-    // Return a (possibly empty) List of intersection points
-    // with the specified line.
-    private List<Line> rectLines() {
-        Point lowerLeft = new Point(getUpperLeft().getX(), getUpperLeft().getY() - getHeight());
+    public List<Line> rectLines() {
+        Point lowerLeft = new Point(getUpperLeft().getX(), getUpperLeft().getY() + getHeight());
         Point upperRight = new Point(getUpperLeft().getX() + getWidth(), getUpperLeft().getY());
-        Point lowerRight = new Point(getUpperLeft().getX() + getWidth(), getUpperLeft().getY() - getHeight());
+        Point lowerRight = new Point(getUpperLeft().getX() + getWidth(), getUpperLeft().getY() + getHeight());
         Line upperLine = new Line(getUpperLeft(), upperRight);
         Line leftLine = new Line(getUpperLeft(), lowerLeft);
         Line lowerLine = new Line(lowerLeft, lowerRight);
@@ -32,6 +30,8 @@ public class Rectangle {
 
     }
 
+    // Return a (possibly empty) List of intersection points
+    // with the specified line.
     public java.util.List<Point> intersectionPoints(Line line) {
         List<Point> intersections = new ArrayList<>();
         for (Line rectLine : rectLines()) {

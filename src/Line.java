@@ -1,4 +1,5 @@
-
+import java.util.ArrayList;
+import java.util.List;
 
 public class Line {
     // Fields
@@ -146,4 +147,27 @@ public class Line {
         return (this.start.equals(other.start) && this.end.equals(other.end)) ||
                 (this.start.equals(other.end) && this.end.equals(other.start));
     }
+
+    // If this line does not intersect with the rectangle, return null.
+    // Otherwise, return the closest intersection point to the
+    // start of the line.
+    public Point closestIntersectionToStartOfLine(Rectangle rect) {
+        List<Point> intersections = rect.intersectionPoints(this);
+        if (intersections.isEmpty()) {
+            return null;
+        }
+        Point closest = intersections.get(0);
+        double minDistance = closest.distance(this.start);
+
+        for(int i=1 ; i < intersections.size(); i++){
+            Point p = intersections.get(i);
+            double currentDistance = p.distance(this.start);
+            if(currentDistance < minDistance){
+                minDistance = currentDistance;
+                closest = p;
+            }
+        }
+        return closest;
+    }
+
 }

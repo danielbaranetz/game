@@ -107,10 +107,10 @@ public class MultipleFramesBouncingBallsAnimation {
                 // ספק את הגבולות הנכונים עבור כל כדור
                 if (i < balls.length / 2) {
                     // כדור זה שייך למסגרת 1
-                    ball.moveOneStep(FRAME1_MIN_X, FRAME1_MIN_Y, FRAME1_MAX_X, FRAME1_MAX_Y);
+                    ball.moveOneStep();
                 } else {
                     // כדור זה שייך למסגרת 2
-                    ball.moveOneStep(FRAME2_MIN_X, FRAME2_MIN_Y, FRAME2_MAX_X, FRAME2_MAX_Y);
+                    ball.moveOneStep();
                 }
 
                 ball.drawOn(d); // צייר את הכדור במיקומו החדש

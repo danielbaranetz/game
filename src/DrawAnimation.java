@@ -19,7 +19,7 @@ public class DrawAnimation {
 
         while (true) {
             // 2. תיקון: קרא למתודה החדשה עם גבולות החלון
-            ball.moveOneStep(0, 0, WIDTH, HEIGHT);
+            ball.moveOneStep();
 
             DrawSurface d = gui.getDrawSurface();
 

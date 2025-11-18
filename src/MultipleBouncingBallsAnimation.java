@@ -40,7 +40,7 @@ public class MultipleBouncingBallsAnimation {
             d.fillRectangle(0, 0, 800, 600);
 
             for (Ball ball : balls) {
-                ball.moveOneStep(0, 0, WIDTH, HEIGHT);
+                ball.moveOneStep();
                 ball.drawOn(d);
             }
 
