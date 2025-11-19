@@ -68,9 +68,22 @@ public class Paddle implements Sprite, Collidable {
         return this.rect;
     }
     public Velocity hit(Point collisionPoint, Velocity currentVelocity){
-
+        double newDx = currentVelocity.getDx();
+        double newDy = currentVelocity.getDy();
+        if (collisionPoint.getY() == rect.getUpperLeft().getY() ||
+                collisionPoint.getY() == rect.getUpperLeft().getY() + rect.getHeight()) {
+            newDy = -newDy;
+        }
+        if (collisionPoint.getX() == rect.getUpperLeft().getX() ||
+                collisionPoint.getX() == rect.getUpperLeft().getX() + rect.getWidth()) {
+            newDx = -newDx;
+        }
+        return new Velocity(newDx, newDy);
     }
 
     // Add this paddle to the game.
-    public void addToGame(Game g){}
+    public void addToGame(Game g){
+        g.addSprite(this);
+        g.addCollidable(this);
+    }
 }

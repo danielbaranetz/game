@@ -32,7 +32,11 @@ public class Game {
         this.gui = new GUI("Arkanoid", WIDTH, HEIGHT);
         this.sleeper = new Sleeper();
 
+        biuoop.KeyboardSensor keyboard = gui.getKeyboardSensor();
 
+        Rectangle paddleRect = new Rectangle(new Point(350, 560), 100, 20);
+        Paddle paddle = new Paddle(keyboard, paddleRect, 5);
+        paddle.addToGame(this);
         Ball ball = new Ball(new Point(400, 300), 5, java.awt.Color.RED);
         ball.setVelocity(5, 5);
         ball.setGameEnvironment(this.environment);
