@@ -1,7 +1,9 @@
 import biuoop.DrawSurface;
+
+import javax.swing.text.EditorKit;
 import java.awt.Color;
 
-public class Block implements Collidable {
+public class Block implements Collidable, Sprite {
 
     private Rectangle rect;
 
@@ -28,9 +30,8 @@ public class Block implements Collidable {
         }
         return new Velocity(newDx, newDy);
     }
-    // בתוך Block.java
+    @Override
     public void drawOn(DrawSurface d) {
-        // ציור המלבן עצמו (צבע מילוי)
         d.setColor(Color.GRAY);
         d.fillRectangle((int) this.rect.getUpperLeft().getX(),
                 (int) this.rect.getUpperLeft().getY(),
@@ -43,5 +44,14 @@ public class Block implements Collidable {
                 (int) this.rect.getUpperLeft().getY(),
                 (int) this.rect.getWidth(),
                 (int) this.rect.getHeight());
+    }
+
+    @Override
+    public void timePassed() {
+        // To edit
+    }
+    public void addToGame(Game g) {
+        g.addSprite(this);
+        g.addCollidable(this);
     }
 }

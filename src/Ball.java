@@ -1,6 +1,6 @@
 import biuoop.DrawSurface;
 
-public class Ball {
+public class Ball implements Sprite {
     // constructor
     private Point center;
     private int radius;
@@ -29,11 +29,18 @@ public class Ball {
         return this.color;
     }
 
+    @Override
     // draw the ball on the given DrawSurface
     public void drawOn(DrawSurface surface) {
         surface.setColor(this.color);
         surface.fillCircle(this.getX(), this.getY(), this.radius);
     }
+
+    @Override
+    public void timePassed() {
+        moveOneStep();
+    }
+
     public void setVelocity(Velocity v){
         this.velocity = v;
     }
@@ -68,6 +75,9 @@ public class Ball {
             Velocity newV = object.hit(collision.collisionPoint(), this.velocity);
             this.velocity = newV;
         }
+    }
+    public void addToGame(Game g) {
+        g.addSprite(this);
     }
 
 
