@@ -2,6 +2,7 @@ import biuoop.DrawSurface;
 import biuoop.GUI;
 import biuoop.Sleeper;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,25 +44,52 @@ public class Game {
 
         ball.addToGame(this);
 
-        Block topWall = new Block(new Rectangle(new Point(0, 0), 800, 20));
+        Block topWall = new Block(new Rectangle(new Point(0, 0), 800, 20), Color.GRAY);
         topWall.addToGame(this);
 
-        Block leftWall = new Block(new Rectangle(new Point(0, 20), 20, 600));
+        Block leftWall = new Block(new Rectangle(new Point(0, 20), 20, 600), Color.GRAY);
         leftWall.addToGame(this);
 
-        Block rightWall = new Block(new Rectangle(new Point(780, 20), 20, 600));
+        Block rightWall = new Block(new Rectangle(new Point(780, 20), 20, 600), Color.GRAY);
         rightWall.addToGame(this);
 
-        Block bottomWall = new Block(new Rectangle(new Point(0, 580), 800, 20));
+        Block bottomWall = new Block(new Rectangle(new Point(0, 580), 800, 20), Color.GRAY);
         bottomWall.addToGame(this);
 
-        for (int i = 0; i < 10; i++) {
-            Block b = new Block(new Rectangle(new Point(50 + i * 70, 100), 50, 20));
+        for (int i = 0; i < 12; i++) {
+            double x = 780 - 50 - (i * 50);
+            Block b = new Block(new Rectangle(new Point(x, 100), 50, 20), Color.GRAY);
             b.addToGame(this);
         }
 
+        for (int i = 0; i < 11; i++) {
+            double x = 780 - 50 - (i * 50);
+
+            Block b = new Block(new Rectangle(new Point(x, 120), 50, 20), Color.RED);
+            b.addToGame(this);
+        }
         for (int i = 0; i < 10; i++) {
-            Block b = new Block(new Rectangle(new Point(50 + i * 70, 140), 50, 20));
+            double x = 780 - 50 - (i * 50);
+
+            Block b = new Block(new Rectangle(new Point(x, 140), 50, 20), Color.YELLOW);
+            b.addToGame(this);
+        }
+        for (int i = 0; i < 9; i++) {
+            double x = 780 - 50 - (i * 50);
+
+            Block b = new Block(new Rectangle(new Point(x, 160), 50, 20), Color.BLUE);
+            b.addToGame(this);
+        }
+        for (int i = 0; i < 8; i++) {
+            double x = 780 - 50 - (i * 50);
+
+            Block b = new Block(new Rectangle(new Point(x, 180), 50, 20), Color.PINK);
+            b.addToGame(this);
+        }
+        for (int i = 0; i < 7; i++) {
+            double x = 780 - 50 - (i * 50);
+
+            Block b = new Block(new Rectangle(new Point(x, 200), 50, 20), Color.GREEN);
             b.addToGame(this);
         }
     }

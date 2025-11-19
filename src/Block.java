@@ -6,9 +6,11 @@ import java.awt.Color;
 public class Block implements Collidable, Sprite {
 
     private Rectangle rect;
+    private Color color;
 
-    public Block(Rectangle rect) {
+    public Block(Rectangle rect,Color color) {
         this.rect = rect;
+        this.color = color;
     }
 
     @Override
@@ -18,7 +20,6 @@ public class Block implements Collidable, Sprite {
 
     @Override
     public Velocity hit(Point collisionPoint, Velocity currentVelocity) {
-        // הגדרת משתני עזר
         double x = collisionPoint.getX();
         double y = collisionPoint.getY();
         double rectX = this.rect.getUpperLeft().getX();
@@ -51,13 +52,12 @@ public class Block implements Collidable, Sprite {
     }
     @Override
     public void drawOn(DrawSurface d) {
-        d.setColor(Color.GRAY);
+        d.setColor(this.color);
         d.fillRectangle((int) this.rect.getUpperLeft().getX(),
                 (int) this.rect.getUpperLeft().getY(),
                 (int) this.rect.getWidth(),
                 (int) this.rect.getHeight());
 
-        // ציור המסגרת (כדי שנראה את הגבולות ברור)
         d.setColor(Color.BLACK);
         d.drawRectangle((int) this.rect.getUpperLeft().getX(),
                 (int) this.rect.getUpperLeft().getY(),

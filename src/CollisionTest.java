@@ -15,20 +15,20 @@ public class CollisionTest {
 
         int wallThickness = 20;
 
-        Block topWall = new Block(new Rectangle(new Point(0, 0), screenWidth, wallThickness));
-        Block bottomWall = new Block(new Rectangle(new Point(0, screenHeight - wallThickness), screenWidth, wallThickness));
-        Block leftWall = new Block(new Rectangle(new Point(0, 0), wallThickness, screenHeight));
-        Block rightWall = new Block(new Rectangle(new Point(screenWidth - wallThickness, 0), wallThickness, screenHeight));
+        Block topWall = new Block(new Rectangle(new Point(0, 0), screenWidth, wallThickness), Color.GRAY);
+        Block bottomWall = new Block(new Rectangle(new Point(0, screenHeight - wallThickness), screenWidth, wallThickness), Color.GRAY);
+        Block leftWall = new Block(new Rectangle(new Point(0, 0), wallThickness, screenHeight), Color.GRAY);
+        Block rightWall = new Block(new Rectangle(new Point(screenWidth - wallThickness, 0), wallThickness, screenHeight), Color.GRAY);
 
         environment.addCollidable(topWall);
         environment.addCollidable(bottomWall);
         environment.addCollidable(leftWall);
         environment.addCollidable(rightWall);
 
-        Block centerBlock = new Block(new Rectangle(new Point(350, 250), 100, 30));
+        Block centerBlock = new Block(new Rectangle(new Point(350, 250), 100, 30), Color.GRAY);
         environment.addCollidable(centerBlock);
 
-        Block sideBlock = new Block(new Rectangle(new Point(150, 150), 30, 100));
+        Block sideBlock = new Block(new Rectangle(new Point(150, 150), 30, 100), Color.GRAY);
         environment.addCollidable(sideBlock);
 
         Ball ball = new Ball(new Point(400, 300), 10, Color.RED);

@@ -68,36 +68,67 @@ public class Paddle implements Sprite, Collidable {
         return this.rect;
     }
     public Velocity hit(Point collisionPoint, Velocity currentVelocity) {
-        // הגדרת משתני עזר
-        double x = collisionPoint.getX();
-        double y = collisionPoint.getY();
-        double rectX = this.rect.getUpperLeft().getX();
-        double rectY = this.rect.getUpperLeft().getY();
-        double width = this.rect.getWidth();
-        double height = this.rect.getHeight();
+        double paddleX = this.rect.getUpperLeft().getX();
+        double paddleWidth = this.rect.getWidth();
+        double hitX = collisionPoint.getX();
 
-        double dx = currentVelocity.getDx();
-        double dy = currentVelocity.getDy();
+        // חישוב המהירות (כדי לשמור על הכוח)
+        double currentSpeed = Math.sqrt(Math.pow(currentVelocity.getDx(), 2) + Math.pow(currentVelocity.getDy(), 2));
 
+        // סף דיוק
         double epsilon = 0.0001;
 
-        if (Math.abs(x - rectX) < epsilon || Math.abs(x - (rectX + width)) < epsilon) {
-            if (dx > 0) {
-                dx = -Math.abs(dx);
-            } else {
-                dx = Math.abs(dx);
-            }
+        // ------------------------------------------------------------
+        // שלב 1: בדיקת קצוות (הכי חשוב!!)
+        // ------------------------------------------------------------
+
+        // האם נגענו בקיר השמאלי ממש?
+        if (Math.abs(hitX - paddleX) < epsilon) {
+            // תתנהג כמו קיר: הפוך DX, שמור על DY
+            return new Velocity(-Math.abs(currentVelocity.getDx()), currentVelocity.getDy());
         }
 
-        if (Math.abs(y - rectY) < epsilon || Math.abs(y - (rectY + height)) < epsilon) {
-            if (dy > 0) {
-                dy = -Math.abs(dy);
-            } else {
-                dy = Math.abs(dy);
-            }
+        // האם נגענו בקיר הימני ממש?
+        if (Math.abs(hitX - (paddleX + paddleWidth)) < epsilon) {
+            // תתנהג כמו קיר: הפוך DX, שמור על DY
+            return new Velocity(Math.abs(currentVelocity.getDx()), currentVelocity.getDy());
         }
 
-        return new Velocity(dx, dy);
+        // ------------------------------------------------------------
+        // שלב 2: אם שרדנו עד לפה, אנחנו בטוחים שאנחנו לא בצדדים
+        // עכשיו מותר להפעיל את ה"Fun Paddle" (אזורים)
+        // ------------------------------------------------------------
+
+        double regionWidth = paddleWidth / 5;
+        Velocity newVelocity;
+
+        // אזור 1
+        if (hitX < paddleX + regionWidth) {
+            newVelocity = Velocity.fromAngleAndSpeed(300, currentSpeed);
+        }
+        // אזור 2
+        else if (hitX < paddleX + 2 * regionWidth) {
+            newVelocity = Velocity.fromAngleAndSpeed(330, currentSpeed);
+        }
+        // אזור 3 (אמצע)
+        else if (hitX < paddleX + 3 * regionWidth) {
+            newVelocity = new Velocity(currentVelocity.getDx(), -currentVelocity.getDy());
+        }
+        // אזור 4
+        else if (hitX < paddleX + 4 * regionWidth) {
+            newVelocity = Velocity.fromAngleAndSpeed(30, currentSpeed);
+        }
+        // אזור 5
+        else {
+            newVelocity = Velocity.fromAngleAndSpeed(60, currentSpeed);
+        }
+
+        // שסתום ביטחון: מכיוון שזו פגיעת אזורים (למעלה), הכדור *חייב* לעלות
+        if (newVelocity.getDy() > 0) {
+            newVelocity = new Velocity(newVelocity.getDx(), -newVelocity.getDy());
+        }
+
+        return newVelocity;
     }
 //        double newDx = currentVelocity.getDx();
 //        double newDy = currentVelocity.getDy();
