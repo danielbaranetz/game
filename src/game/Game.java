@@ -1,10 +1,13 @@
+package game;
+
 import biuoop.DrawSurface;
 import biuoop.GUI;
 import biuoop.Sleeper;
+import geometry.Point;
+import geometry.Rectangle;
+import primitives.Ball;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Game {
     private SpriteCollection sprites;
@@ -27,63 +30,66 @@ public class Game {
 
     }
 
-    // Initialize a new game: create the Blocks and Ball (and Paddle)
+    // Initialize a new game: create the Blocks and primitives.Ball (and game.Paddle)
     // and add them to the game.
     public void initialize() {
-        this.gui = new GUI("Arkanoid", WIDTH, HEIGHT);
+        this.gui = new GUI("Arknoid", WIDTH, HEIGHT);
         this.sleeper = new Sleeper();
 
         biuoop.KeyboardSensor keyboard = gui.getKeyboardSensor();
 
-        Rectangle paddleRect = new Rectangle(new Point(350, 560), 100, 20);
-        Paddle paddle = new Paddle(keyboard, paddleRect, 5);
+        geometry.Rectangle paddleRect = new geometry.Rectangle(new geometry.Point(350, 560), 100, 20);
+        Paddle paddle = new Paddle(keyboard, paddleRect, 7);
         paddle.addToGame(this);
-        Ball ball = new Ball(new Point(400, 300), 5, java.awt.Color.RED);
+        Ball ball = new Ball(new geometry.Point(400, 300), 5, Color.RED);
+        Ball ball2 = new Ball(new geometry.Point(200,300), 5, Color.RED);
         ball.setVelocity(5, 5);
         ball.setGameEnvironment(this.environment);
-
+        ball2.setVelocity(5,5);
+        ball2.setGameEnvironment(this.environment);
         ball.addToGame(this);
+        ball2.addToGame(this);
 
-        Block topWall = new Block(new Rectangle(new Point(0, 0), 800, 20), Color.GRAY);
+        Block topWall = new Block(new geometry.Rectangle(new geometry.Point(0, 0), 800, 20), Color.GRAY);
         topWall.addToGame(this);
 
-        Block leftWall = new Block(new Rectangle(new Point(0, 20), 20, 600), Color.GRAY);
+        Block leftWall = new Block(new geometry.Rectangle(new geometry.Point(0, 20), 20, 600), Color.GRAY);
         leftWall.addToGame(this);
 
-        Block rightWall = new Block(new Rectangle(new Point(780, 20), 20, 600), Color.GRAY);
+        Block rightWall = new Block(new geometry.Rectangle(new geometry.Point(780, 20), 20, 600), Color.GRAY);
         rightWall.addToGame(this);
 
-        Block bottomWall = new Block(new Rectangle(new Point(0, 580), 800, 20), Color.GRAY);
+        Block bottomWall = new Block(new geometry.Rectangle(new geometry.Point(0, 580), 800, 20), Color.GRAY);
         bottomWall.addToGame(this);
 
         for (int i = 0; i < 12; i++) {
             double x = 780 - 50 - (i * 50);
-            Block b = new Block(new Rectangle(new Point(x, 100), 50, 20), Color.GRAY);
+            Block b = new Block(new geometry.Rectangle(new geometry.Point(x, 100), 50, 20), Color.GRAY);
             b.addToGame(this);
         }
 
         for (int i = 0; i < 11; i++) {
             double x = 780 - 50 - (i * 50);
 
-            Block b = new Block(new Rectangle(new Point(x, 120), 50, 20), Color.RED);
+            Block b = new Block(new geometry.Rectangle(new geometry.Point(x, 120), 50, 20), Color.RED);
             b.addToGame(this);
         }
         for (int i = 0; i < 10; i++) {
             double x = 780 - 50 - (i * 50);
 
-            Block b = new Block(new Rectangle(new Point(x, 140), 50, 20), Color.YELLOW);
+            Block b = new Block(new geometry.Rectangle(new geometry.Point(x, 140), 50, 20), Color.YELLOW);
             b.addToGame(this);
         }
         for (int i = 0; i < 9; i++) {
             double x = 780 - 50 - (i * 50);
 
-            Block b = new Block(new Rectangle(new Point(x, 160), 50, 20), Color.BLUE);
+            Block b = new Block(new geometry.Rectangle(new geometry.Point(x, 160), 50, 20), Color.BLUE);
             b.addToGame(this);
         }
         for (int i = 0; i < 8; i++) {
             double x = 780 - 50 - (i * 50);
 
-            Block b = new Block(new Rectangle(new Point(x, 180), 50, 20), Color.PINK);
+            Block b = new Block(new geometry.Rectangle(new geometry.Point(x, 180), 50, 20), Color.PINK);
             b.addToGame(this);
         }
         for (int i = 0; i < 7; i++) {

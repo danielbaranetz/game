@@ -1,3 +1,9 @@
+package app;
+
+import geometry.Point;
+import primitives.Ball;
+import primitives.Velocity;
+
 import java.util.Random;
 
 public class Main {

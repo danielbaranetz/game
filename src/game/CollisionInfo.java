@@ -1,3 +1,7 @@
+package game;
+
+import geometry.Point;
+
 public class CollisionInfo {
     private Point collisionPoint;
     private Collidable collisionObject;

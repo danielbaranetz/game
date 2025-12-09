@@ -1,3 +1,5 @@
+package game;
+
 import biuoop.DrawSurface;
 
 public interface Sprite {

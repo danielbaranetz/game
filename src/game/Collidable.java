@@ -1,3 +1,9 @@
+package game;
+
+import geometry.Point;
+import geometry.Rectangle;
+import primitives.Velocity;
+
 public interface Collidable {
     // Return the "collision shape" of the object.
     Rectangle getCollisionRectangle();

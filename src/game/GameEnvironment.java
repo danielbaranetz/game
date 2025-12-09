@@ -1,3 +1,8 @@
+package game;
+
+import geometry.Line;
+import geometry.Point;
+
 import java.util.ArrayList;
 import java.util.List;
 

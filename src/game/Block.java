@@ -1,6 +1,10 @@
-import biuoop.DrawSurface;
+package game;
 
-import javax.swing.text.EditorKit;
+import biuoop.DrawSurface;
+import geometry.Point;
+import geometry.Rectangle;
+import primitives.Velocity;
+
 import java.awt.Color;
 
 public class Block implements Collidable, Sprite {

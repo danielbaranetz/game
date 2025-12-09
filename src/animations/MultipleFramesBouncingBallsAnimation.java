@@ -1,5 +1,11 @@
+package animations;
+
 import biuoop.GUI;
 import biuoop.DrawSurface;
+import geometry.Point;
+import primitives.Ball;
+import primitives.Velocity;
+
 import java.awt.Color;
 import java.util.Random;
 

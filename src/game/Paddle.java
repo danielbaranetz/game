@@ -1,10 +1,15 @@
+package game;
+
 import biuoop.DrawSurface;
 import biuoop.KeyboardSensor;
+import geometry.Point;
+import geometry.Rectangle;
+import primitives.Velocity;
 
 public class Paddle implements Sprite, Collidable {
     private biuoop.KeyboardSensor keyboard;
     private Rectangle rect;
-    private int speed = 5;
+    private int speed;
 
     public Paddle(biuoop.KeyboardSensor keyboard, Rectangle rect, int speed){
         this.keyboard = keyboard;
@@ -40,7 +45,7 @@ public class Paddle implements Sprite, Collidable {
         this.rect = new Rectangle(p, this.rect.getWidth(), this.rect.getHeight());
     }
 
-    // Sprite
+    // game.Sprite
     public void timePassed(){
             if (keyboard.isPressed(KeyboardSensor.LEFT_KEY)) {
                 moveLeft();
@@ -63,7 +68,7 @@ public class Paddle implements Sprite, Collidable {
                 (int) rect.getHeight());
     }
 
-    // Collidable
+    // game.Collidable
     public Rectangle getCollisionRectangle(){
         return this.rect;
     }
@@ -93,11 +98,6 @@ public class Paddle implements Sprite, Collidable {
             // תתנהג כמו קיר: הפוך DX, שמור על DY
             return new Velocity(Math.abs(currentVelocity.getDx()), currentVelocity.getDy());
         }
-
-        // ------------------------------------------------------------
-        // שלב 2: אם שרדנו עד לפה, אנחנו בטוחים שאנחנו לא בצדדים
-        // עכשיו מותר להפעיל את ה"Fun Paddle" (אזורים)
-        // ------------------------------------------------------------
 
         double regionWidth = paddleWidth / 5;
         Velocity newVelocity;
@@ -130,18 +130,6 @@ public class Paddle implements Sprite, Collidable {
 
         return newVelocity;
     }
-//        double newDx = currentVelocity.getDx();
-//        double newDy = currentVelocity.getDy();
-//        if (collisionPoint.getY() == rect.getUpperLeft().getY() ||
-//                collisionPoint.getY() == rect.getUpperLeft().getY() + rect.getHeight()) {
-//            newDy = -newDy;
-//        }
-//        if (collisionPoint.getX() == rect.getUpperLeft().getX() ||
-//                collisionPoint.getX() == rect.getUpperLeft().getX() + rect.getWidth()) {
-//            newDx = -newDx;
-//        }
-//        return new Velocity(newDx, newDy);
-    //}
 
     // Add this paddle to the game.
     public void addToGame(Game g){

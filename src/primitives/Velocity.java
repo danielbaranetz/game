@@ -1,3 +1,7 @@
+package primitives;
+
+import geometry.Point;
+
 public class Velocity {
     private double dx;
     private double dy;

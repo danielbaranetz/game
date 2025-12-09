@@ -1,6 +1,11 @@
+package app;
+
 import biuoop.DrawSurface;
 import biuoop.GUI;
 import biuoop.Sleeper;
+import geometry.Point;
+import primitives.Ball;
+
 import java.awt.Color; // הוספתי import
 
 public class DrawAnimation {
@@ -8,7 +13,7 @@ public class DrawAnimation {
     public static final int HEIGHT = 600;
 
     public static void drawAnimation(Point start, double dx, double dy) {
-        GUI gui = new GUI("Bouncing Ball Animation", WIDTH, HEIGHT); // שם חלון ברור יותר
+        GUI gui = new GUI("Bouncing primitives.Ball Animation", WIDTH, HEIGHT); // שם חלון ברור יותר
         Sleeper sleeper = new Sleeper();
 
         // 3. תיקון קטן: אין צורך ליצור 'point' חדש, אפשר להשתמש ב-'start' ישירות

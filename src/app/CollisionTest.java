@@ -1,6 +1,14 @@
+package app;
+
 import biuoop.GUI;
 import biuoop.DrawSurface;
 import biuoop.Sleeper;
+import game.Block;
+import game.GameEnvironment;
+import geometry.Point;
+import geometry.Rectangle;
+import primitives.Ball;
+
 import java.awt.Color;
 
 public class CollisionTest {

@@ -1,4 +1,9 @@
+package primitives;
+
 import biuoop.DrawSurface;
+import game.*;
+import geometry.Line;
+import geometry.Point;
 
 public class Ball implements Sprite {
     // constructor
@@ -57,7 +62,7 @@ public class Ball implements Sprite {
         this.gameEnvironment = gameEnvironment;
     }
 
-    // It receives the boundaries from outside (instead of taking from DrawAnimation)
+    // It receives the boundaries from outside (instead of taking from app.DrawAnimation)
     public void moveOneStep(){
         double dx = this.velocity.getDx();
         double dy = this.velocity.getDy();
