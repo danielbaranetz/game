@@ -29,7 +29,9 @@ public class SpriteCollection {
         for(Sprite s : spriteCollections){
             s.drawOn(d);
         }
+    }
 
-
+    public void removeSprite(Sprite s){
+        this.spriteCollections.remove(s);
     }
 }

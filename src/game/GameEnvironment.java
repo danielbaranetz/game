@@ -44,6 +44,9 @@ public class GameEnvironment {
 
         return new CollisionInfo(closestPoint, closestObject);
     }
+    public void removeCollidable(Collidable c){
+        this.collidables.remove(c);
+    }
 }
 
 

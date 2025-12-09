@@ -4,6 +4,7 @@ import biuoop.DrawSurface;
 import biuoop.KeyboardSensor;
 import geometry.Point;
 import geometry.Rectangle;
+import primitives.Ball;
 import primitives.Velocity;
 
 public class Paddle implements Sprite, Collidable {
@@ -72,7 +73,7 @@ public class Paddle implements Sprite, Collidable {
     public Rectangle getCollisionRectangle(){
         return this.rect;
     }
-    public Velocity hit(Point collisionPoint, Velocity currentVelocity) {
+    public Velocity hit(Ball hitter, Point collisionPoint, Velocity currentVelocity) {
         double paddleX = this.rect.getUpperLeft().getX();
         double paddleWidth = this.rect.getWidth();
         double hitX = collisionPoint.getX();

@@ -128,4 +128,12 @@ public class Game {
             }
         }
     }
+
+    public void removeCollidable(Collidable c) {
+        this.environment.removeCollidable(c);
+    }
+
+    public void removeSprite(Sprite s) {
+        this.sprites.removeSprite(s);
+    }
 }
