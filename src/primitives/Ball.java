@@ -86,6 +86,8 @@ public class Ball implements Sprite {
     }
 
 
-
+    public void removeFromGame(Game g){
+        g.removeSprite(this);
+    }
 
 }

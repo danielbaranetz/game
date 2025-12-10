@@ -19,7 +19,8 @@ public class SpriteCollection {
 
     // call timePassed() on all sprites.
     public void notifyAllTimePassed(){
-        for(Sprite s : spriteCollections){
+        List<Sprite> spritesCopy = new ArrayList<>(this.spriteCollections);
+        for(Sprite s : spritesCopy){
             s.timePassed();
         }
     }
