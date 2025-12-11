@@ -18,10 +18,14 @@ public class Game {
     private final int HEIGHT = 600;
     private Counter remainingBlocks;
     private Counter remainingBalls;
+    private Counter score;
 
     public Game(){
         this.sprites = new SpriteCollection();
         this.environment = new GameEnvironment();
+    }
+    public GameEnvironment getEnvironment(){
+        return this.environment;
     }
 
     public void addCollidable(Collidable c){
@@ -39,11 +43,15 @@ public class Game {
         this.sleeper = new Sleeper();
         this.remainingBlocks = new Counter();
         this.remainingBalls = new Counter();
+        this.score = new Counter();
 
         biuoop.KeyboardSensor keyboard = gui.getKeyboardSensor();
 
+        ScoreTrackingListener scoreListener = new ScoreTrackingListener(this.score);
+
         BlockRemover blockRemover = new BlockRemover(this, this.remainingBlocks);
         BallRemover ballRemover = new BallRemover(this, this.remainingBalls);
+        BonusBall bonusBall = new BonusBall(this, this.remainingBalls);
 
 
         geometry.Rectangle paddleRect = new geometry.Rectangle(new geometry.Point(350, 560), 100, 20);
@@ -81,11 +89,18 @@ public class Game {
         bottomWall.addToGame(this);
         bottomWall.addHitListener(ballRemover);
 
+        Block increaseBallsBlock = new Block(new geometry.Rectangle(new geometry.Point(50, 200), 50, 20), Color.cyan);
+        increaseBallsBlock.addToGame(this);
+        increaseBallsBlock.addHitListener(bonusBall);
+        increaseBallsBlock.addHitListener(blockRemover);
+        this.remainingBlocks.increase(1);
+
         for (int i = 0; i < 12; i++) {
             double x = 780 - 50 - (i * 50);
             Block b = new Block(new geometry.Rectangle(new geometry.Point(x, 100), 50, 20), Color.GRAY);
             b.addToGame(this);
             b.addHitListener(blockRemover);
+            b.addHitListener(scoreListener);
             this.remainingBlocks.increase(1);
         }
 
@@ -95,6 +110,7 @@ public class Game {
             Block b = new Block(new geometry.Rectangle(new geometry.Point(x, 120), 50, 20), Color.RED);
             b.addToGame(this);
             b.addHitListener(blockRemover);
+            b.addHitListener(scoreListener);
             this.remainingBlocks.increase(1);
         }
         for (int i = 0; i < 10; i++) {
@@ -103,6 +119,7 @@ public class Game {
             Block b = new Block(new geometry.Rectangle(new geometry.Point(x, 140), 50, 20), Color.YELLOW);
             b.addToGame(this);
             b.addHitListener(blockRemover);
+            b.addHitListener(scoreListener);
             this.remainingBlocks.increase(1);
         }
         for (int i = 0; i < 9; i++) {
@@ -111,6 +128,7 @@ public class Game {
             Block b = new Block(new geometry.Rectangle(new geometry.Point(x, 160), 50, 20), Color.BLUE);
             b.addToGame(this);
             b.addHitListener(blockRemover);
+            b.addHitListener(scoreListener);
             this.remainingBlocks.increase(1);
         }
         for (int i = 0; i < 8; i++) {
@@ -119,6 +137,7 @@ public class Game {
             Block b = new Block(new geometry.Rectangle(new geometry.Point(x, 180), 50, 20), Color.PINK);
             b.addToGame(this);
             b.addHitListener(blockRemover);
+            b.addHitListener(scoreListener);
             this.remainingBlocks.increase(1);
         }
         for (int i = 0; i < 7; i++) {
@@ -127,6 +146,7 @@ public class Game {
             Block b = new Block(new Rectangle(new Point(x, 200), 50, 20), Color.GREEN);
             b.addToGame(this);
             b.addHitListener(blockRemover);
+            b.addHitListener(scoreListener);
             this.remainingBlocks.increase(1);
         }
 

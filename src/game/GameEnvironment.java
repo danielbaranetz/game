@@ -26,7 +26,11 @@ public class GameEnvironment {
         Point closestPoint = null;
         Collidable closestObject = null;
         double minDistance = Double.MAX_VALUE;
-        for (Collidable c : collidables) {
+
+        // --- התיקון הקריטי כאן: יצירת עותק של הרשימה ---
+        List<Collidable> copyCollidables = new ArrayList<>(this.collidables);
+
+        for (Collidable c : copyCollidables) { // רצים על העותק!
             Point p = trajectory.closestIntersectionToStartOfLine(c.getCollisionRectangle());
             if (p != null) {
                 double currentDistance = trajectory.start().distance(p);
@@ -34,19 +38,18 @@ public class GameEnvironment {
                     minDistance = currentDistance;
                     closestPoint = p;
                     closestObject = c;
-
                 }
             }
         }
+
         if (closestObject == null) {
             return null;
         }
 
         return new CollisionInfo(closestPoint, closestObject);
     }
+
     public void removeCollidable(Collidable c){
         this.collidables.remove(c);
     }
 }
-
-

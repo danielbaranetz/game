@@ -1,0 +1,17 @@
+package game;
+
+import primitives.Ball;
+
+public class ScoreTrackingListener implements HitListener {
+    private Counter currentScore;
+
+    public ScoreTrackingListener(Counter scoreCounter) {
+        this.currentScore = scoreCounter;
+    }
+
+    @Override
+    public void hitEvent(Block beingHit, Ball hitter) {
+
+        this.currentScore.increase(5);
+    }
+}
