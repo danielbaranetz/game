@@ -45,9 +45,11 @@ public class Game {
         this.remainingBalls = new Counter();
         this.score = new Counter();
 
+
         biuoop.KeyboardSensor keyboard = gui.getKeyboardSensor();
 
         ScoreTrackingListener scoreListener = new ScoreTrackingListener(this.score);
+        ScoreIndicator scoreIndicator = new ScoreIndicator(this.score);
 
         BlockRemover blockRemover = new BlockRemover(this, this.remainingBlocks);
         BallRemover ballRemover = new BallRemover(this, this.remainingBalls);
@@ -125,7 +127,7 @@ public class Game {
         for (int i = 0; i < 9; i++) {
             double x = 780 - 50 - (i * 50);
 
-            Block b = new Block(new geometry.Rectangle(new geometry.Point(x, 160), 50, 20), Color.BLUE);
+            Block b = new Block(new geometry.Rectangle(new geometry.Point(x, 160), 50, 20), Color.cyan);
             b.addToGame(this);
             b.addHitListener(blockRemover);
             b.addHitListener(scoreListener);
@@ -149,6 +151,7 @@ public class Game {
             b.addHitListener(scoreListener);
             this.remainingBlocks.increase(1);
         }
+        scoreIndicator.addToGame(this);
 
     }
 
