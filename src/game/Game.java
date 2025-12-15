@@ -182,7 +182,20 @@ public class Game {
                 this.sleeper.sleepFor(milliSecondLeftToSleep);
             }
         }
-        this.gui.close();
+        if (this.remainingBlocks.getValue() == 0) {
+            this.score.increase(100);
+        }
+        DrawSurface d = gui.getDrawSurface();
+        d.setColor(Color.BLUE);
+        d.fillRectangle(0, 0, 800, 600);
+        if(this.remainingBlocks.getValue() == 0) {
+            d.setColor(Color.GREEN);
+            d.drawText(150, 300, "You Win! Your Score is: " + this.score.getValue(), 40);
+        } else{
+            d.setColor(Color.RED);
+            d.drawText(150, 300,"Game Over. Your Score is: " + this.score.getValue(), 40);
+        }
+        gui.show(d);
     }
 
     public void removeCollidable(Collidable c) {
