@@ -6,19 +6,21 @@ import biuoop.Sleeper;
 import geometry.Point;
 import geometry.Rectangle;
 import primitives.Ball;
-
+import animations.Animation;
+import animations.AnimationRunner;
 import java.awt.*;
 
-public class Game {
+public class Game implements Animation {
     private SpriteCollection sprites;
     private GameEnvironment environment;
     private GUI gui;
-    private Sleeper sleeper;
     private final int WIDTH = 800;
     private final int HEIGHT = 600;
     private Counter remainingBlocks;
     private Counter remainingBalls;
     private Counter score;
+    private AnimationRunner runner;
+    private boolean running;
 
     public Game(){
         this.sprites = new SpriteCollection();
@@ -40,7 +42,7 @@ public class Game {
     // and add them to the game.
     public void initialize() {
         this.gui = new GUI("Arknoid", WIDTH, HEIGHT);
-        this.sleeper = new Sleeper();
+        this.runner = new AnimationRunner(this.gui);
         this.remainingBlocks = new Counter();
         this.remainingBalls = new Counter();
         this.score = new Counter();
@@ -158,44 +160,9 @@ public class Game {
     // Run the game -- start the animation loop.
 
     public void run() {
-        int framesPerSecond = 60;
-        int millisecondsPerFrame = 1000 / framesPerSecond;
-
-        while (this.remainingBlocks.getValue() > 0 && this.remainingBalls.getValue() > 0) {
-            long startTime = System.currentTimeMillis();
-
-            DrawSurface d = gui.getDrawSurface();
-
-            d.setColor(java.awt.Color.BLUE);
-            d.fillRectangle(0, 0, 800, 600);
-
-            this.sprites.drawAllOn(d);
-
-            gui.show(d);
-
-            this.sprites.notifyAllTimePassed();
-
-            long usedTime = System.currentTimeMillis() - startTime;
-            long milliSecondLeftToSleep = millisecondsPerFrame - usedTime;
-
-            if (milliSecondLeftToSleep > 0) {
-                this.sleeper.sleepFor(milliSecondLeftToSleep);
-            }
-        }
-        if (this.remainingBlocks.getValue() == 0) {
-            this.score.increase(100);
-        }
-        DrawSurface d = gui.getDrawSurface();
-        d.setColor(Color.BLUE);
-        d.fillRectangle(0, 0, 800, 600);
-        if(this.remainingBlocks.getValue() == 0) {
-            d.setColor(Color.GREEN);
-            d.drawText(150, 300, "You Win! Your Score is: " + this.score.getValue(), 40);
-        } else{
-            d.setColor(Color.RED);
-            d.drawText(150, 300,"Game Over. Your Score is: " + this.score.getValue(), 40);
-        }
-        gui.show(d);
+        this.runner.run(new CountdownAnimation(2, 3, this.sprites));
+        this.running = true;
+        this.runner.run(this);
     }
 
     public void removeCollidable(Collidable c) {
@@ -205,4 +172,31 @@ public class Game {
     public void removeSprite(Sprite s) {
         this.sprites.removeSprite(s);
     }
+    @Override
+    public void doOneFrame(DrawSurface d) {
+        d.setColor(Color.BLACK);
+        d.fillRectangle(0, 0, 800, 600);
+        this.sprites.drawAllOn(d);
+
+        this.sprites.notifyAllTimePassed();
+        if (this.gui.getKeyboardSensor().isPressed("p") || this.gui.getKeyboardSensor().isPressed("פ") ) {
+            this.runner.run(new PauseScreen(this.gui.getKeyboardSensor()));
+
+        }
+
+        if (this.remainingBlocks.getValue() == 0) {
+            this.score.increase(100);
+            this.running = false;
+        }
+
+        if (this.remainingBalls.getValue() == 0) {
+            this.running = false;
+        }
+    }
+    @Override
+    public boolean shouldStop(){
+        return !this.running;
+    }
+
+
 }
