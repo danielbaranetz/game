@@ -180,7 +180,8 @@ public class Game implements Animation {
 
         this.sprites.notifyAllTimePassed();
         if (this.gui.getKeyboardSensor().isPressed("p") || this.gui.getKeyboardSensor().isPressed("פ") ) {
-            this.runner.run(new PauseScreen(this.gui.getKeyboardSensor()));
+            this.runner.run(new PauseScreen(this.gui.getKeyboardSensor(),this.sprites));
+            this.runner.run(new CountdownAnimation(2, 3, this.sprites));
 
         }
 
