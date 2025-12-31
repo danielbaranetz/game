@@ -2,7 +2,6 @@ package game;
 
 import biuoop.DrawSurface;
 import biuoop.GUI;
-import biuoop.Sleeper;
 import geometry.Point;
 import geometry.Rectangle;
 import primitives.Ball;
@@ -10,7 +9,7 @@ import animations.Animation;
 import animations.AnimationRunner;
 import java.awt.*;
 
-public class Game implements Animation {
+public class GameLevel implements Animation {
     private SpriteCollection sprites;
     private GameEnvironment environment;
     private GUI gui;
@@ -22,7 +21,7 @@ public class Game implements Animation {
     private AnimationRunner runner;
     private boolean running;
 
-    public Game(){
+    public GameLevel(){
         this.sprites = new SpriteCollection();
         this.environment = new GameEnvironment();
     }

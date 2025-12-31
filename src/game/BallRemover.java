@@ -3,10 +3,10 @@ package game;
 import primitives.Ball;
 
 public class BallRemover implements HitListener{
-    private Game game;
+    private GameLevel game;
     private Counter remainingBalls;
 
-    public BallRemover(Game game, Counter removedBalls) {
+    public BallRemover(GameLevel game, Counter removedBalls) {
         this.game = game;
         this.remainingBalls = removedBalls;
     }

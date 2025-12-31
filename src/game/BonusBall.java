@@ -2,15 +2,15 @@ package game;
 
 import primitives.Ball;
 import primitives.Velocity;
-import geometry.Point;
+
 import java.awt.Color;
 import java.util.Random;
 
 public class BonusBall implements HitListener {
-    private Game game;
+    private GameLevel game;
     private Counter remainingBalls;
 
-    public BonusBall(Game game, Counter remainingBalls){
+    public BonusBall(GameLevel game, Counter remainingBalls){
         this.game = game;
         this.remainingBalls = remainingBalls;
     }

@@ -1,10 +1,10 @@
 package app;
 
-import game.Game;
+import game.GameLevel;
 
 public class Ass2Game {
     public static void main(String[] args) {
-        Game game = new Game();
+        GameLevel game = new GameLevel();
         game.initialize();
         game.run();
     }

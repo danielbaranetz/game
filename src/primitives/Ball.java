@@ -81,12 +81,12 @@ public class Ball implements Sprite {
             this.velocity = newV;
         }
     }
-    public void addToGame(Game g) {
+    public void addToGame(GameLevel g) {
         g.addSprite(this);
     }
 
 
-    public void removeFromGame(Game g){
+    public void removeFromGame(GameLevel g){
         g.removeSprite(this);
     }
 

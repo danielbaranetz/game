@@ -24,7 +24,7 @@ public class ScoreIndicator implements Sprite {
     public void timePassed() {
 
     }
-    public void addToGame(Game g){
+    public void addToGame(GameLevel g){
         g.addSprite(this);
 
     }
