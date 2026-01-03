@@ -22,6 +22,8 @@ public class GameLevel implements Animation {
     private Counter score;
     private AnimationRunner runner;
     private boolean running;
+    private Counter lives;
+    private Paddle paddle;
 
     private LevelInformation levelInformation;
     private KeyboardSensor keyboard;
@@ -30,17 +32,42 @@ public class GameLevel implements Animation {
             LevelInformation levelInformation,
             KeyboardSensor keyboard,
             AnimationRunner runner,
-            Counter score
+            Counter score,
+            Counter lives
     ){
         this.levelInformation = levelInformation;
         this.keyboard = keyboard;
         this.runner = runner;
         this.score = score;
+        this.lives = lives;
+
         this.sprites = new SpriteCollection();
         this.environment = new GameEnvironment();
         this.remainingBlocks = new Counter();
         this.remainingBalls = new Counter();
     }
+
+    private void createBallsOnPaddle() {
+        for (Velocity v : this.levelInformation.initialBallVelocities()) {
+            Ball ball = new Ball(new Point(400, 550), 5, Color.WHITE);
+            ball.setVelocity(v);
+            ball.setGameEnvironment(this.environment);
+
+
+            ball.addToGame(this);
+            this.remainingBalls.increase(1);
+        }
+
+        int paddleWidth = this.levelInformation.paddleWidth();
+        int paddleSpeed = this.levelInformation.paddleSpeed();
+        Point paddleStart = new Point(400 - paddleWidth / 2, 560);
+
+        this.paddle = new Paddle(this.keyboard,
+                new Rectangle(paddleStart, paddleWidth, 20),
+                paddleSpeed);
+        this.paddle.addToGame(this);
+    }
+
     public GameEnvironment getEnvironment(){
         return this.environment;
     }
@@ -72,27 +99,6 @@ public class GameLevel implements Animation {
         BallRemover ballRemover = new BallRemover(this, this.remainingBalls);
         deathRegion.addHitListener(ballRemover);
 
-// בתוך הלולאה שיוצרת כדורים:
-        for(Velocity v: this.levelInformation.initialBallVelocities()){
-            // תיקון סופי: מיקום 550.
-            // זה קרוב מאוד לפאדל (שמתחיל ב-560) אבל לא נוגע בו,
-            // ככה זה נראה כמו שיגור מושלם.
-            Ball ball = new Ball(new Point(400, 550), 5, Color.WHITE);
-
-            ball.setVelocity(v);
-            ball.setGameEnvironment(this.environment);
-            ball.addToGame(this);
-            this.remainingBalls.increase(1);
-        }
-        int paddleWidth = this.levelInformation.paddleWidth();
-        int paddleSpeed = this.levelInformation.paddleSpeed();
-        Point paddleStart = new Point(400 - paddleWidth / 2, 560);
-        Paddle paddle = new Paddle(
-                this.keyboard,
-                new Rectangle(paddleStart, paddleWidth, 20),
-                paddleSpeed);
-        paddle.addToGame(this);
-
         BlockRemover blockRemover = new BlockRemover(this, this.remainingBlocks);
         ScoreTrackingListener scoreListener = new ScoreTrackingListener(this.score);
 
@@ -103,20 +109,29 @@ public class GameLevel implements Animation {
             this.remainingBlocks.increase(1);
         }
 
-        // 6. הוספת תצוגת הניקוד ושם השלב
         ScoreIndicator scoreIndicator = new ScoreIndicator(this.score);
         scoreIndicator.addToGame(this);
 
         LevelNameIndicator levelname = new LevelNameIndicator(this.levelInformation.levelName());
         levelname.addToGame(this);
+
+        LivesIndicator livesIndicator = new LivesIndicator(this.lives);
+        livesIndicator.addToGame(this);
     }
 
     // Run the game -- start the animation loop.
 
     public void run() {
-        this.runner.run(new CountdownAnimation(2, 3, this.sprites));
-        this.running = true;
-        this.runner.run(this);
+        while (this.lives.getValue() > 0 && this.remainingBlocks.getValue() > 0){
+            createBallsOnPaddle();
+            this.runner.run(new CountdownAnimation(2, 3, this.sprites));
+            this.running = true;
+            this.runner.run(this);
+            this.paddle.removeFromGame(this);
+            if( this.remainingBalls.getValue() == 0){
+                this.lives.decrease(1);
+            }
+        }
     }
 
     public void removeCollidable(Collidable c) {

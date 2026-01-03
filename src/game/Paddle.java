@@ -137,4 +137,9 @@ public class Paddle implements Sprite, Collidable {
         g.addSprite(this);
         g.addCollidable(this);
     }
+
+    public void removeFromGame(GameLevel g) {
+        g.removeSprite(this);
+        g.removeCollidable(this);
+    }
 }
