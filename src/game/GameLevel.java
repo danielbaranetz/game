@@ -2,17 +2,19 @@ package game;
 
 import biuoop.DrawSurface;
 import biuoop.GUI;
+import biuoop.KeyboardSensor;
 import geometry.Point;
 import geometry.Rectangle;
 import primitives.Ball;
 import animations.Animation;
 import animations.AnimationRunner;
+import primitives.Velocity;
+
 import java.awt.*;
 
 public class GameLevel implements Animation {
     private SpriteCollection sprites;
     private GameEnvironment environment;
-    private GUI gui;
     private final int WIDTH = 800;
     private final int HEIGHT = 600;
     private Counter remainingBlocks;
@@ -21,9 +23,23 @@ public class GameLevel implements Animation {
     private AnimationRunner runner;
     private boolean running;
 
-    public GameLevel(){
+    private LevelInformation levelInformation;
+    private KeyboardSensor keyboard;
+
+    public GameLevel(
+            LevelInformation levelInformation,
+            KeyboardSensor keyboard,
+            AnimationRunner runner,
+            Counter score
+    ){
+        this.levelInformation = levelInformation;
+        this.keyboard = keyboard;
+        this.runner = runner;
+        this.score = score;
         this.sprites = new SpriteCollection();
         this.environment = new GameEnvironment();
+        this.remainingBlocks = new Counter();
+        this.remainingBalls = new Counter();
     }
     public GameEnvironment getEnvironment(){
         return this.environment;
@@ -40,120 +56,59 @@ public class GameLevel implements Animation {
     // Initialize a new game: create the Blocks and primitives.Ball (and game.Paddle)
     // and add them to the game.
     public void initialize() {
-        this.gui = new GUI("Arknoid", WIDTH, HEIGHT);
-        this.runner = new AnimationRunner(this.gui);
-        this.remainingBlocks = new Counter();
-        this.remainingBalls = new Counter();
-        this.score = new Counter();
+        this.sprites.addSprite(this.levelInformation.getBackground());
 
 
-        biuoop.KeyboardSensor keyboard = gui.getKeyboardSensor();
-
-        ScoreTrackingListener scoreListener = new ScoreTrackingListener(this.score);
-        ScoreIndicator scoreIndicator = new ScoreIndicator(this.score);
-
-        BlockRemover blockRemover = new BlockRemover(this, this.remainingBlocks);
-        BallRemover ballRemover = new BallRemover(this, this.remainingBalls);
-        BonusBall bonusBall = new BonusBall(this, this.remainingBalls);
-
-
-        geometry.Rectangle paddleRect = new geometry.Rectangle(new geometry.Point(350, 560), 100, 20);
-        Paddle paddle = new Paddle(keyboard, paddleRect, 7);
-        paddle.addToGame(this);
-
-        Ball ball = new Ball(new geometry.Point(240, 300), 5, Color.RED);
-        ball.setVelocity(5, 5);
-        ball.setGameEnvironment(this.environment);
-        ball.addToGame(this);
-        this.remainingBalls.increase(1);
-
-        Ball ball2 = new Ball(new geometry.Point(200,300), 5, Color.RED);
-        ball2.setVelocity(5,5);
-        ball2.setGameEnvironment(this.environment);
-        ball2.addToGame(this);
-        this.remainingBalls.increase(1);
-
-        Ball ball3 = new Ball(new geometry.Point(220,300), 5, Color.RED);
-        ball3.setVelocity(5,5);
-        ball3.setGameEnvironment(this.environment);
-        ball3.addToGame(this);
-        this.remainingBalls.increase(1);
-
-        Block topWall = new Block(new geometry.Rectangle(new geometry.Point(0, 0), 800, 20), Color.GRAY);
+        Block topWall = new Block(new Rectangle(new Point(0, 20), 800, 20), Color.GRAY);
         topWall.addToGame(this);
-
-        Block leftWall = new Block(new geometry.Rectangle(new geometry.Point(0, 20), 20, 600), Color.GRAY);
+        Block leftWall = new Block(new Rectangle(new Point(0, 20), 20, 600), Color.GRAY);
         leftWall.addToGame(this);
-
-        Block rightWall = new Block(new geometry.Rectangle(new geometry.Point(780, 20), 20, 600), Color.GRAY);
+        Block rightWall = new Block(new Rectangle(new Point(780, 20), 20, 600), Color.GRAY);
         rightWall.addToGame(this);
 
-        Block bottomWall = new Block(new geometry.Rectangle(new geometry.Point(0, 601), 800, 10), Color.GRAY);
-        bottomWall.addToGame(this);
-        bottomWall.addHitListener(ballRemover);
+        Block deathRegion = new Block(new Rectangle(new Point(0, 600), 800, 20), Color.GRAY);
+        deathRegion.addToGame(this);
 
-        Block increaseBallsBlock = new Block(new geometry.Rectangle(new geometry.Point(50, 200), 50, 20), Color.cyan);
-        increaseBallsBlock.addToGame(this);
-        increaseBallsBlock.addHitListener(bonusBall);
-        increaseBallsBlock.addHitListener(blockRemover);
-        this.remainingBlocks.increase(1);
+        BallRemover ballRemover = new BallRemover(this, this.remainingBalls);
+        deathRegion.addHitListener(ballRemover);
 
-        for (int i = 0; i < 12; i++) {
-            double x = 780 - 50 - (i * 50);
-            Block b = new Block(new geometry.Rectangle(new geometry.Point(x, 100), 50, 20), Color.GRAY);
+// בתוך הלולאה שיוצרת כדורים:
+        for(Velocity v: this.levelInformation.initialBallVelocities()){
+            // תיקון סופי: מיקום 550.
+            // זה קרוב מאוד לפאדל (שמתחיל ב-560) אבל לא נוגע בו,
+            // ככה זה נראה כמו שיגור מושלם.
+            Ball ball = new Ball(new Point(400, 550), 5, Color.WHITE);
+
+            ball.setVelocity(v);
+            ball.setGameEnvironment(this.environment);
+            ball.addToGame(this);
+            this.remainingBalls.increase(1);
+        }
+        int paddleWidth = this.levelInformation.paddleWidth();
+        int paddleSpeed = this.levelInformation.paddleSpeed();
+        Point paddleStart = new Point(400 - paddleWidth / 2, 560);
+        Paddle paddle = new Paddle(
+                this.keyboard,
+                new Rectangle(paddleStart, paddleWidth, 20),
+                paddleSpeed);
+        paddle.addToGame(this);
+
+        BlockRemover blockRemover = new BlockRemover(this, this.remainingBlocks);
+        ScoreTrackingListener scoreListener = new ScoreTrackingListener(this.score);
+
+        for (Block b : this.levelInformation.blocks()) {
             b.addToGame(this);
             b.addHitListener(blockRemover);
             b.addHitListener(scoreListener);
             this.remainingBlocks.increase(1);
         }
 
-        for (int i = 0; i < 11; i++) {
-            double x = 780 - 50 - (i * 50);
-
-            Block b = new Block(new geometry.Rectangle(new geometry.Point(x, 120), 50, 20), Color.RED);
-            b.addToGame(this);
-            b.addHitListener(blockRemover);
-            b.addHitListener(scoreListener);
-            this.remainingBlocks.increase(1);
-        }
-        for (int i = 0; i < 10; i++) {
-            double x = 780 - 50 - (i * 50);
-
-            Block b = new Block(new geometry.Rectangle(new geometry.Point(x, 140), 50, 20), Color.YELLOW);
-            b.addToGame(this);
-            b.addHitListener(blockRemover);
-            b.addHitListener(scoreListener);
-            this.remainingBlocks.increase(1);
-        }
-        for (int i = 0; i < 9; i++) {
-            double x = 780 - 50 - (i * 50);
-
-            Block b = new Block(new geometry.Rectangle(new geometry.Point(x, 160), 50, 20), Color.cyan);
-            b.addToGame(this);
-            b.addHitListener(blockRemover);
-            b.addHitListener(scoreListener);
-            this.remainingBlocks.increase(1);
-        }
-        for (int i = 0; i < 8; i++) {
-            double x = 780 - 50 - (i * 50);
-
-            Block b = new Block(new geometry.Rectangle(new geometry.Point(x, 180), 50, 20), Color.PINK);
-            b.addToGame(this);
-            b.addHitListener(blockRemover);
-            b.addHitListener(scoreListener);
-            this.remainingBlocks.increase(1);
-        }
-        for (int i = 0; i < 7; i++) {
-            double x = 780 - 50 - (i * 50);
-
-            Block b = new Block(new Rectangle(new Point(x, 200), 50, 20), Color.GREEN);
-            b.addToGame(this);
-            b.addHitListener(blockRemover);
-            b.addHitListener(scoreListener);
-            this.remainingBlocks.increase(1);
-        }
+        // 6. הוספת תצוגת הניקוד ושם השלב
+        ScoreIndicator scoreIndicator = new ScoreIndicator(this.score);
         scoreIndicator.addToGame(this);
 
+        LevelNameIndicator levelname = new LevelNameIndicator(this.levelInformation.levelName());
+        levelname.addToGame(this);
     }
 
     // Run the game -- start the animation loop.
@@ -178,8 +133,8 @@ public class GameLevel implements Animation {
         this.sprites.drawAllOn(d);
 
         this.sprites.notifyAllTimePassed();
-        if (this.gui.getKeyboardSensor().isPressed("p") || this.gui.getKeyboardSensor().isPressed("פ") ) {
-            this.runner.run(new PauseScreen(this.gui.getKeyboardSensor(),this.sprites));
+        if (this.keyboard.isPressed("p") || this.keyboard.isPressed("פ") ) {
+            this.runner.run(new PauseScreen(this.keyboard, this.sprites));
             this.runner.run(new CountdownAnimation(2, 3, this.sprites));
 
         }
@@ -196,6 +151,9 @@ public class GameLevel implements Animation {
     @Override
     public boolean shouldStop(){
         return !this.running;
+    }
+    public int getRemainingBalls() {
+        return this.remainingBalls.getValue();
     }
 
 

@@ -5,6 +5,8 @@ import game.*;
 import geometry.Line;
 import geometry.Point;
 
+import java.awt.*;
+
 public class Ball implements Sprite {
     // constructor
     private Point center;
@@ -39,6 +41,9 @@ public class Ball implements Sprite {
     public void drawOn(DrawSurface surface) {
         surface.setColor(this.color);
         surface.fillCircle(this.getX(), this.getY(), this.radius);
+
+        surface.setColor(Color.BLACK);
+        surface.drawCircle(this.getX(), this.getY(), this.radius);
     }
 
     @Override

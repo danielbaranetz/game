@@ -76,18 +76,24 @@ public class WideEasy implements LevelInformation{
     @Override
     public List<Block> blocks() {
         List<Block> blocks = new ArrayList<>();
-        Color[] colors = {Color.RED, Color.ORANGE, Color.YELLOW, Color.GREEN, Color.BLUE, Color.PINK, Color.CYAN};
-        int blockY = 250;
-        int blockWidth = 50;
 
-        for(int i = 0; i < 15; i++){
-            Color color;
-            if(i < colors.length){
-                color = colors[i];
-            } else {
-                color = Color.CYAN;
-            }
-            Block b = new Block(new Rectangle(new Point(10 + (i * 52), blockY), 52, 25), color);
+        Color[] colors = {
+                Color.RED, Color.RED,
+                Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.YELLOW,
+                Color.GREEN, Color.GREEN, Color.GREEN,
+                Color.BLUE, Color.BLUE,
+                Color.PINK, Color.PINK,
+                Color.CYAN, Color.CYAN
+        };
+
+        int blockY = 250;
+        int blockWidth = 50; // רוחב כל בלוק
+
+        for (int i = 0; i < colors.length; i++) {
+            // חישוב חדש: מתחילים מ-25, וקופצים ב-50 בדיוק (בלי רווחים מיותרים)
+            double x = 25 + (i * blockWidth);
+
+            Block b = new Block(new Rectangle(new Point(x, blockY), blockWidth, 25), colors[i]);
             blocks.add(b);
         }
 

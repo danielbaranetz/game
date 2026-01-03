@@ -52,9 +52,29 @@ public class CountdownAnimation implements Animation {
         }
 
         // 4. ציור המספר (רק אם לא סיימנו)
+// ... (אחרי חישוב המשתנה count) ...
+
         if (!this.stop) {
-            d.setColor(java.awt.Color.WHITE);
-            d.drawText(d.getWidth() / 2, d.getHeight() / 2 + 100, Integer.toString(count), 60);
+            String countText = Integer.toString(count);
+            int textSize = 60;
+            // מיקום הטקסט
+            int x = d.getWidth() / 2;
+            int y = d.getHeight() / 2 + 100;
+
+            // 1. יצירת ה"מסגרת" - ציור הטקסט בשחור בהזזות קטנות
+            d.setColor(java.awt.Color.BLACK);
+            d.drawText(x - 2, y, countText, textSize); // קצת שמאלה
+            d.drawText(x + 2, y, countText, textSize); // קצת ימינה
+            d.drawText(x, y - 2, countText, textSize); // קצת למעלה
+            d.drawText(x, y + 2, countText, textSize); // קצת למטה
+
+            // אפשר להוסיף גם אלכסונים למסגרת עבה יותר (אופציונלי)
+            d.drawText(x - 2, y - 2, countText, textSize);
+            d.drawText(x + 2, y + 2, countText, textSize);
+
+            // 2. ציור הטקסט הלבן המקורי מעל הכל
+            d.setColor(java.awt.Color.WHITE); // או הצבע המקורי שבחרת (למשל צבע האנטנה של הלוויין)
+            d.drawText(x, y, countText, textSize);
         }
     }
 
